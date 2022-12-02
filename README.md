@@ -1,4 +1,21 @@
+
+## Description
+気になることを記録していく「QuBack」というオリジナルの Web アプリのフロントエンドです。 
+
+バックエンドAPIにアクセスするために@tanstack/react-queryのuseQueryを使ってhooksを作成しています。
+状態管理にZustandを使用しています。
+見た目は、Mantineのコンポーネントと、Tailwind CSSで作成しています。
+
+## Tools
+- NextJs(TypeScript)
+- Tailwind CSS
+- Mantine
+- React-Query
+- Zustand
+
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+
 
 ## Getting Started
 

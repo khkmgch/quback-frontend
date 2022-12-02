@@ -61,7 +61,7 @@ const Auth: NextPage = () => {
   return (
     <Layout title="Home">
       <div className="flex flex-col items-center justify-center rounded-md border-2 border-solid border-indigo-600 p-10">
-        <ShieldCheckIcon className="h-16 w-16 text-blue-500" />
+        {/* <ShieldCheckIcon className="h-16 w-16 text-blue-500" /> */}
         {/* errorに何らかの文字列が存在する場合にアラートを表示 */}
         {error && (
           <Alert
@@ -79,7 +79,7 @@ const Auth: NextPage = () => {
           <TextInput
             mt="md"
             id="email"
-            label="Email"
+            label="メールアドレス"
             withAsterisk
             placeholder="example@gmail.com"
             //useFormのgetInputPropsを使う。(value, onChange, useStateを使わなくて済む)
@@ -88,10 +88,10 @@ const Auth: NextPage = () => {
           <PasswordInput
             mt="md"
             id="password"
-            label="Password"
+            label="パスワード"
             withAsterisk
             placeholder="password"
-            description="Must be min 8 char"
+            description="8文字以上"
             {...form.getInputProps('password')}
           />
           <Group mt="xl" position="apart">
@@ -108,15 +108,15 @@ const Auth: NextPage = () => {
               }}
             >
               {isRegister
-                ? 'Have an account? Login'
-                : "Don't have an account? Register"}
+                ? 'アカウントをお持ちの方はこちら'
+                : "新しくアカウントを作成したい方はこちら"}
             </Anchor>
             <Button
               leftIcon={<IconDatabase size={14} />}
               color="cyan"
               type="submit"
             >
-              {isRegister ? 'Register' : 'Login'}
+              {isRegister ? '登録' : 'ログイン'}
             </Button>
           </Group>
         </form>

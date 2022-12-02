@@ -52,7 +52,7 @@ export const QuestionItem: FC<Props> = ({
 
   return (
     <List.Item className="m-4 flex h-56 w-192 flex-col bg-white p-4">
-      <div className="flex  h-12 items-center bg-teal-500">
+      <div className="flex  h-12 items-center ">
         <Image
           radius="xl"
           width={40}
@@ -68,12 +68,12 @@ export const QuestionItem: FC<Props> = ({
         />
         <span>{questionUser?.userName}</span>
       </div>
-      <div className="h-28 bg-blue-400 py-1">
+      <div className="h-28  py-1">
         <span>{title}</span>
       </div>
 
       {/* float-leftでdivタグの中の要素を左に寄せる */}
-      <div className="flex h-8 items-start justify-end bg-rose-400 pt-1">
+      <div className="flex h-8 items-start justify-end  pt-1">
         <Link href={`/question/${id}`}>
           <PencilAltIcon
             className="mx-1 h-6 w-6 cursor-pointer text-blue-500"

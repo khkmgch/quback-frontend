@@ -25,7 +25,7 @@ const HeaderCustom: FC<Props> = ({ mode = 'Home' }) => {
             </span>
           </Link>
         </div>
-        <div className="basis-1/2">center</div>
+        <div className="basis-1/2"> </div>
         <Link href="/auth">
           <div className="basis-1/4">ログイン/新規登録</div>
         </Link>
