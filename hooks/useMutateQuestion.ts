@@ -51,7 +51,7 @@ export const useMutateQuestion = () => {
   )
 
   const updateQuestionMutation = useMutation(
-    async (question: EditingQuestion) => {
+    async (question: Omit<Question_WithRelation, 'createdAt'>) => {
       const res = await axios.patch(
         `${process.env.NEXT_PUBLIC_API_URL}/question/${question.id}`,
         question

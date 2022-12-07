@@ -1,33 +1,31 @@
 import { Header, Image, Loader } from '@mantine/core'
-import { IconClock, IconLogout, IconSettings } from '@tabler/icons'
+import { IconClock, IconLogout, IconSearch, IconSettings } from '@tabler/icons'
 import { useQueryClient } from '@tanstack/react-query'
 import axios from 'axios'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { FC } from 'react'
+import { FC, useState } from 'react'
 import { useQueryUser } from '../hooks/useQueryUser'
 
 type Props = {
   mode: string
 }
 const HeaderCustom: FC<Props> = ({ mode = 'Home' }) => {
-  if (mode === 'Home')
+  if (mode === 'Home' || mode === 'Auth')
     return (
       <Header
-        height={60}
+        height={70}
         p="xs"
         className="flex flex-row items-center bg-white"
       >
         <div className="basis-1/4">
           <Link href="/" style={{ textDecoration: 'none' }}>
-            <span className="text-2xl font-semibold text-teal-500">
-              Qu Back
-            </span>
+            <span className="text-2xl font-semibold text-black">Qu Back</span>
           </Link>
         </div>
         <div className="basis-1/2"> </div>
-        <Link href="/auth">
-          <div className="basis-1/4">ログイン/新規登録</div>
+        <Link href="/auth" style={{ textDecoration: 'none' }}>
+          <div className="basis-1/4 text-custom-blue-4">ログイン/新規登録</div>
         </Link>
         {/* Header content */}
       </Header>
@@ -52,26 +50,24 @@ const HeaderCustom: FC<Props> = ({ mode = 'Home' }) => {
     else
       return (
         <Header
-          height={60}
+          height={70}
           p="xs"
           className="flex flex-row items-center bg-white"
         >
           <div className="basis-1/4">
             <Link href="/plaza" style={{ textDecoration: 'none' }}>
-              <span className="text-2xl font-semibold text-teal-500">
-                Qu Back
-              </span>
+              <span className="text-2xl font-semibold text-black">Qu Back</span>
             </Link>
           </div>
           <div className="flex basis-1/2 flex-row items-center justify-center">
             <Link href="/plaza" className="flex items-center justify-center">
               <IconClock
                 size={40}
-                className="cursor-pointer text-gray-300 hover:text-indigo-500"
+                className="cursor-pointer text-gray-300 hover:text-custom-blue-4"
               />
             </Link>
             <Link
-              href="/profile"
+              href={`/profile/${user?.id}`}
               className="mx-5 flex items-center justify-center"
             >
               <Image
@@ -81,24 +77,24 @@ const HeaderCustom: FC<Props> = ({ mode = 'Home' }) => {
                     : PUBLIC_FOLDER + '/person/noAvatar.png'
                 }
                 alt=""
-                className="cursor-pointer rounded-full outline outline-2 outline-offset-2 outline-gray-300 hover:outline-indigo-500"
+                className="cursor-pointer rounded-full outline outline-2 outline-offset-2 outline-gray-300 hover:outline-custom-blue-4"
                 radius="xl"
                 width={30}
                 height={30}
                 fit="contain"
               />
             </Link>
-            <Link href="/plaza" className="flex items-center justify-center">
-              <IconSettings
+            <Link href="/search" className="flex items-center justify-center">
+              <IconSearch
                 size={40}
-                className="cursor-pointer text-gray-300 hover:text-indigo-500"
+                className="cursor-pointer text-gray-300 hover:text-custom-blue-4"
               />
             </Link>
           </div>
           <div className="flex basis-1/4 justify-end">
             <IconLogout
               size={40}
-              className="cursor-pointer text-gray-300 hover:text-indigo-500"
+              className="cursor-pointer text-gray-300 hover:text-custom-blue-4"
               onClick={logout}
             />
           </div>

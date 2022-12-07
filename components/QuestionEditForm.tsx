@@ -2,19 +2,30 @@ import {
   Button,
   Center,
   Switch,
+  Textarea,
   TextInput,
   useMantineTheme,
 } from '@mantine/core'
+import { Like, Link } from '@prisma/client'
 import { IconDatabase, IconLock, IconLockOpen } from '@tabler/icons'
-import { FormEvent } from 'react'
+import { FC, FormEvent } from 'react'
 import { useMutateQuestion } from '../hooks/useMutateQuestion'
 import useStore from '../store'
+import {
+  Book_WithRelation,
+  EditingQuestion,
+  Question_WithRelation,
+} from '../types'
 
-export const QuestionEditForm = () => {
+type Props = {
+  question: Omit<Question_WithRelation, 'createdAt'>
+  update: (payload: any) => void
+}
+export const QuestionEditForm: FC<Props> = ({ question, update }) => {
   //useStoreからeditingQuestionを取り出す
-  const { editingQuestion } = useStore()
+  //   const { editingQuestion } = useStore()
   //useStoreからupdateEditingQuestionを取り出す
-  const update = useStore((state) => state.updateEditingQuestion)
+  //   const update = useStore((state) => state.updateEditingQuestion)
   const { updateQuestionMutation } = useMutateQuestion()
   const theme = useMantineTheme()
   //受け取るイベントに型を付ける。(FormEvent<HTMLFormElement>)
@@ -22,34 +33,28 @@ export const QuestionEditForm = () => {
     e.preventDefault()
 
     updateQuestionMutation.mutate({
-      id: editingQuestion.id,
-      title: editingQuestion.title,
-      description: editingQuestion.description,
-      isPrivate: editingQuestion.isPrivate,
-      books: editingQuestion.books,
-      likes: editingQuestion.likes,
+      id: question.id,
+      updatedAt: question.updatedAt,
+      title: question.title,
+      description: question.description,
+      isPrivate: question.isPrivate,
+      userId: question.userId,
+      books: question.books,
+      likes: question.likes,
     })
   }
 
   return (
-    <>
+    <div className="w-256">
       <form onSubmit={handleSubmit}>
         <TextInput
+          size="xl"
+          variant="unstyled"
           mt="md"
           placeholder="title"
           //inputは入力がnullになるとエラーになるため、editingQuestion.titleがない場合の''を設定しておく
-          value={editingQuestion.title || ''}
-          onChange={(e) =>
-            update({ ...editingQuestion, title: e.target.value })
-          }
-        />
-        <TextInput
-          mt="md"
-          placeholder="description"
-          value={editingQuestion.description || ''}
-          onChange={(e) =>
-            update({ ...editingQuestion, description: e.target.value })
-          }
+          value={question.title || ''}
+          onChange={(e) => update({ ...question, title: e.target.value })}
         />
         <Switch
           size="md"
@@ -64,23 +69,33 @@ export const QuestionEditForm = () => {
               color={theme.colors.indigo[6]}
             />
           }
-          checked={editingQuestion.isPrivate}
+          checked={question.isPrivate}
           onChange={(e) =>
-            update({ ...editingQuestion, isPrivate: e.currentTarget.checked })
+            update({ ...question, isPrivate: e.currentTarget.checked })
           }
         />
-        {/* ボタンを中央寄せするためにCenterを使っている */}
-        <Center mt="lg">
+        <Textarea
+          autosize
+          minRows={20}
+          size="md"
+          mt="md"
+          radius="md"
+          placeholder="ここに、疑問の答えを書こう。"
+          value={question.description || ''}
+          onChange={(e) => update({ ...question, description: e.target.value })}
+        />
+
+        <div className="mt-5 flex items-center justify-end">
           <Button
-            disabled={editingQuestion.title === ''}
-            leftIcon={<IconDatabase size={14} />}
-            color="cyan"
+            disabled={question.title === ''}
+            color="teal"
+            variant="light"
             type="submit"
           >
-            {editingQuestion.id === 0 ? 'Create' : 'Update'}
+            更新して保存
           </Button>
-        </Center>
+        </div>
       </form>
-    </>
+    </div>
   )
 }

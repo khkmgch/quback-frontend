@@ -25,9 +25,13 @@ export const Layout: FC<Props> = ({ children, title = 'Home' }) => {
       styles={(theme) => ({
         main: {
           backgroundColor:
-            theme.colorScheme === 'dark'
+            title !== 'Home'
+              ? theme.colorScheme === 'dark'
+                ? theme.colors.dark[8]
+                : theme.colors['custom-blue'][0]
+              : theme.colorScheme === 'dark'
               ? theme.colors.dark[8]
-              : theme.colors.gray[0],
+              : theme.colors.white,
         },
       })}
     >

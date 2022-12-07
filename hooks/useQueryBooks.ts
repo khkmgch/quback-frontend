@@ -2,16 +2,17 @@ import { useRouter } from 'next/router'
 import axios from 'axios'
 import { useQuery } from '@tanstack/react-query'
 import { Book } from '@prisma/client'
+import { Book_WithRelation } from '../types'
 
 export const useQueryBooks = () => {
   const router = useRouter()
   const getBooks = async () => {
-    const { data } = await axios.get<Book[]>(
-      `${process.env.NEXT_PUBLIC_API_URL}/book`
+    const { data } = await axios.get<Book_WithRelation[]>(
+      `${process.env.NEXT_PUBLIC_API_URL}/book/all/shelf`
     )
     return data
   }
-  return useQuery<Book[], Error>({
+  return useQuery<Book_WithRelation[], Error>({
     queryKey: ['books'],
     queryFn: getBooks,
     onError: (err: any) => {

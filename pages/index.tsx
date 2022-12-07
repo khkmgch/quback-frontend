@@ -4,8 +4,13 @@ import { Layout } from '../components/Layout'
 const Home: NextPage = () => {
   return (
     <Layout title="Home">
-      <div className="flex flex-col items-center justify-center rounded-md border-2 border-solid border-indigo-600 p-10">
-        Welcome to Qu Back!
+      <div className='w-screen h-screen'>
+        <div className='w-full h-1/2'></div>
+        <div className='w-full h-1/2 bg-custom-blue-0 flex items-center justify-center'>
+          <p className='text-2xl text-center font-semibold'>
+            日々の疑問を簡単に管理
+          </p>
+        </div>
       </div>
     </Layout>
   )

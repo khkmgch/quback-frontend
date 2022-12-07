@@ -26,6 +26,7 @@ export type EditingQuestion = {
   likes: Like[]
 }
 
+
 const userWithRelation = Prisma.validator<Prisma.UserArgs>()({
   include: {
     questions: true,

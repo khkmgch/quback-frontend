@@ -10,7 +10,19 @@ module.exports = {
       width: {
         128: '32rem',
         192: '48rem',
-        256: '64rem'
+        256: '64rem',
+      },
+      colors: {
+        'custom-blue-0':'#E4E6EB',
+        'custom-blue-1':'#BEC0C4',
+        'custom-blue-2':'#999B9E',
+        'custom-blue-3':'#747578',
+        'custom-blue-4':'#4A4B4D',
+
+        'custom-red-0': '#EBE4E6',
+        'custom-red-1': "#660A24",
+        'custom-green-0': '#E6EBE4',
+        'custom-orange-0': "#EBB52F"
       },
     },
   },

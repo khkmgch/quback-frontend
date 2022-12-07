@@ -32,16 +32,20 @@ export const QuestionCreateForm = () => {
       <form onSubmit={handleSubmit}>
         <Switch
           size="md"
-          color={theme.colorScheme === 'dark' ? 'gray' : 'indigo'}
+          color={theme.colorScheme === 'dark' ? 'gray' : 'pink'}
+          styles={(theme) => ({
+            root: {
+              // backgroundColor:theme.colors['custom-blue'][3],
+              // '&:hover': {
+              //   backgroundColor: theme.fn.darken('#747578', 0.15),
+              // },
+            },
+          })}
           onLabel={
-            <IconLock size={16} stroke={2.5} color={theme.colors.orange[4]} />
+            <IconLock size={16} stroke={2.5} color={theme.colors["custom-yellow"][0]} />
           }
           offLabel={
-            <IconLockOpen
-              size={16}
-              stroke={2.5}
-              color={theme.colors.indigo[6]}
-            />
+            <IconLockOpen size={16} stroke={2.5} color={theme.colors['custom-red'][1]} />
           }
           checked={creatingQuestion.isPrivate}
           onChange={(e) =>
@@ -49,6 +53,7 @@ export const QuestionCreateForm = () => {
           }
         />
         <TextInput
+          className="h-20"
           mt="md"
           placeholder="今、気になっていることは何ですか？"
           variant="unstyled"
@@ -58,15 +63,15 @@ export const QuestionCreateForm = () => {
             update({ ...creatingQuestion, title: e.target.value })
           }
         />
+        <hr />
         {/* ボタンを中央寄せするためにCenterを使っている */}
         <Center mt="lg">
           <Button
             disabled={creatingQuestion.title === ''}
-            leftIcon={<IconDatabase size={14} />}
-            color="indigo "
+            color="gray"
             type="submit"
           >
-            '作成する'
+            作成
           </Button>
         </Center>
       </form>

@@ -1,33 +1,69 @@
+import { Loader } from '@mantine/core'
+import axios from 'axios'
 import { NextPage } from 'next'
 import { useRouter } from 'next/router'
-import React from 'react'
+import React, { FC, useEffect, useState } from 'react'
+import { BookList } from '../../components/BookList'
 import { Layout } from '../../components/Layout'
 import { QuestionEditForm } from '../../components/QuestionEditForm'
-import { useQueryQuestions } from '../../hooks/useQueryQuestions'
-import useStore from '../../store'
-
+import { EditingQuestion, Question_WithRelation } from '../../types'
 const Question: NextPage = () => {
-  //useStoreからeditingQuestionを取り出す
-  const { editingQuestion } = useStore()
+  
+  const [editingQuestion, setEditingQuestion] = useState<Omit<Question_WithRelation, "createdAt">>({
+    id: 0,
+    updatedAt: new Date(),
+    title: '',
+    description: '',
+    isPrivate: false,
+    userId: 0,
+    books: [],
+    likes: [],
+  })
   const router = useRouter()
-  const { id } = router.query
 
-  // const { data: questions, status } = useQueryQuestions()
-  // const question = questions?.find((ele) => {
-  //   if (typeof id !== 'string') return false
-  //   return ele.id === parseInt(id)
-  // })
+  const updateEditingQuestion = (payload: any) =>
+    setEditingQuestion({
+      id: payload.id,
+      updatedAt: payload.updatedAt,
+      title: payload.title,
+      description: payload.description,
+      isPrivate: payload.isPrivate,
+      userId: payload.userId,
+      books: payload.books,
+      likes: payload.likes,
+    })
+  useEffect(() => {
+    const { id } = router.query
+    if (typeof id === 'string') {
+      type FetchQuestion = (id: string) => Promise<void>
+      const fetchQuestion: FetchQuestion = async (id: string) => {
+        const response: { data: Question_WithRelation } | null = await axios
+          .get<Question_WithRelation>(
+            `${process.env.NEXT_PUBLIC_API_URL}/question/${id}`
+          )
+          .then((res) => res)
+          .catch((err) => {
+            console.error(err)
+            return null
+          })
+        if (response) {
+          setEditingQuestion(response.data)
+        }
+      }
+      fetchQuestion(id)
+    }
+  }, [router.query])
   return (
     <Layout title="question">
-      <div>Question</div>
-      {/* <p>{question?.id}</p>
-      <p>{question?.title}</p>
-      {question?.id && <QuestionEditForm />} */}
-      {typeof id === 'string' && editingQuestion.id === parseInt(id) ? (
-        <QuestionEditForm />
+      {editingQuestion.id !== 0 ? (
+        <QuestionEditForm
+          question={editingQuestion}
+          update={updateEditingQuestion}
+        />
       ) : (
-        <></>
+        <Loader />
       )}
+      <BookList isMine={true} userId={editingQuestion.userId}/>
     </Layout>
   )
 }

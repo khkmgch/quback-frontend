@@ -47,6 +47,19 @@ export default function App({ Component, pageProps }: AppProps) {
           //プロジェクト全体のカラーテーマとフォントを設定
           colorScheme: 'light',
           fontFamily: 'Verdana, sans-serif',
+          colors: {
+            'custom-blue': [
+              '#E4E6EB',
+              '#BEC0C4',
+              '#999B9E',
+              '#747578',
+              '#4A4B4D',
+            ],
+            'custom-yellow': ['#EBE7CC'],
+            'custom-green': ['#E6EBE4', '#818583'],
+            'custom-red': ['#EBE4E6', "#660A24"],
+            'custom-orange': ["#EBB52F"]
+          },
         }}
       >
         <Component {...pageProps} />
