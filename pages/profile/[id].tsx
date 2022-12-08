@@ -11,6 +11,7 @@ import { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { BookShelf } from '../../components/BookShelf'
+import Charts from '../../components/Charts'
 import { Layout } from '../../components/Layout'
 import { QuestionList } from '../../components/QuestionList'
 import { useQueryUser } from '../../hooks/useQueryUser'
@@ -211,7 +212,7 @@ const Profile: NextPage = () => {
           ) : display === 'book' ? (
             <BookShelf isMine={true} userId={user.id} />
           ) : display === 'chart' ? (
-            <></>
+            <Charts isMine={true} userId={user.id} />
           ) : (
             <></>
           )
@@ -220,7 +221,7 @@ const Profile: NextPage = () => {
         ) : display === 'book' ? (
           <BookShelf isMine={false} userId={user.id} />
         ) : display === 'chart' ? (
-          <></>
+          <Charts isMine={false} userId={user.id} />
         ) : (
           <></>
         )}

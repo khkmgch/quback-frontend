@@ -38,7 +38,7 @@ export const BookShelf: FC<Props> = ({ userId, isMine }) => {
   if (status === 'loading') return <Loader />
   else
     return (
-      <div className="mt-5  flex items-center justify-center bg-orange-200 p-5">
+      <div className="mt-5  flex items-center justify-center bg-custom-yellow p-5">
         <Grid className="w-256" gutter={30} align="flex-end ">
           {books?.map((book) => (
             <Grid.Col md={3} lg={2} key={book.id}>

@@ -31,7 +31,7 @@ export const QuestionList: FC<Props> = ({ isTimeline, isMine, userId }) => {
   //タイムライン、他の人のプロフィール、自分のプロフィールで場合分け
   useEffect(() => {
     const fetchQuestions = async () => {
-      const reaponse: { data: Question_WithRelation[] } = isTimeline
+      const response: { data: Question_WithRelation[] } = isTimeline
         ? await axios.get(
             `${process.env.NEXT_PUBLIC_API_URL}/question/all/timeline`
           )
@@ -42,8 +42,8 @@ export const QuestionList: FC<Props> = ({ isTimeline, isMine, userId }) => {
         : typeof loginQuestions !== 'undefined'
         ? { data: loginQuestions }
         : { data: [] }
-      console.log(reaponse)
-      const questions = reaponse.data
+      console.log(response)
+      const questions = response.data
       setQuestions(questions)
     }
     fetchQuestions()
