@@ -1,6 +1,10 @@
 import { useRouter } from 'next/router'
 import axios from 'axios'
-import { useQueryClient, useMutation } from '@tanstack/react-query'
+import {
+  useQueryClient,
+  useMutation,
+  UseMutationResult,
+} from '@tanstack/react-query'
 import { Question } from '@prisma/client'
 import useStore from '../store'
 import {
@@ -71,6 +75,7 @@ export const useMutateQuestion = () => {
             )
           )
         }
+        window.location.reload()
       },
       onError: (err: any) => {
         if (err.response.status === 401 || err.response.status === 403) {
@@ -103,10 +108,58 @@ export const useMutateQuestion = () => {
       },
     }
   )
+  const linkToBook_QuestionMutation: UseMutationResult<
+    void,
+    any,
+    { questionId: number; bookId: number },
+    unknown
+  > = useMutation(
+    async ({ questionId, bookId }) => {
+      await axios.patch(
+        `${process.env.NEXT_PUBLIC_API_URL}/question/${questionId}/link`,
+        { bookId: bookId }
+      )
+    },
+    {
+      onSuccess: (_, variables) => {
+        window.location.reload()
+      },
+      onError: (err: any) => {
+        if (err.response.status === 401 || err.response.status === 403) {
+          router.push('/')
+        }
+      },
+    }
+  )
+  const unLinkToBook_QuestionMutation: UseMutationResult<
+    void,
+    any,
+    { questionId: number; bookId: number },
+    unknown
+  > = useMutation(
+    async ({ questionId, bookId }) => {
+      await axios.patch(
+        `${process.env.NEXT_PUBLIC_API_URL}/question/${questionId}/unlink`,
+        { bookId }
+      )
+    },
+    {
+      onSuccess: (_, variables) => {
+        window.location.reload()
+      },
+      onError: (err: any) => {
+        if (err.response.status === 401 || err.response.status === 403) {
+          router.push('/')
+        }
+      },
+    }
+  )
   //reactのコンポーネントからこれらのmutationを使えるようにreturn しておく
   return {
     createQuestionMutation,
     updateQuestionMutation,
     deleteQuestionMutation,
+    linkToBook_QuestionMutation,
+    unLinkToBook_QuestionMutation
   }
 }

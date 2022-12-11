@@ -47,6 +47,15 @@ export default function App({ Component, pageProps }: AppProps) {
           //プロジェクト全体のカラーテーマとフォントを設定
           colorScheme: 'light',
           fontFamily: 'Verdana, sans-serif',
+          fontSizes: {
+            xs: 10,
+            sm: 12,
+            md: 14,
+            lg: 16,
+            xl: 20,
+            xxl:24,
+            xxxl:28
+          },
           colors: {
             'custom-blue': [
               '#E4E6EB',

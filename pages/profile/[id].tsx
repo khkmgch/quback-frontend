@@ -46,7 +46,6 @@ const Profile: NextPage = () => {
   const PUBLIC_FOLDER = process.env.NEXT_PUBLIC_FOLDER
   const theme = useMantineTheme()
   const router = useRouter()
-  const { id } = router.query
 
   const [display, setDisplay] = useState('question')
 
@@ -84,37 +83,67 @@ const Profile: NextPage = () => {
       setIsFollow((prevState) => !prevState)
     }
   }
+  // useEffect(() => {
+  //   const { id } = router.query
+  //   if (typeof id === 'string') {
+  //     type FetchQuestion = (id: string) => Promise<void>
+  //     const fetchQuestion: FetchQuestion = async (id: string) => {
+  //       const response: { data: Question_WithRelation } | null = await axios
+  //         .get<Question_WithRelation>(
+  //           `${process.env.NEXT_PUBLIC_API_URL}/question/${id}`
+  //         )
+  //         .then((res) => res)
+  //         .catch((err) => {
+  //           console.error(err)
+  //           return null
+  //         })
+  //       if (response) {
+  //         setEditingQuestion(response.data)
+  //       }
+  //     }
+  //     fetchQuestion(id)
+  //   }
+  // }, [router.query])
 
   useEffect(() => {
-    const fetchUser = async (userId: number) => {
-      const reaponse: { data: Omit<User_WithRelation, 'hashedPassword'> } =
-        await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/user/${userId}`)
-      console.log(reaponse)
-      const user = reaponse.data
-      setUser({
-        id: user.id,
-        email: user.email,
-        userName: user.userName,
-        profilePicture: user.profilePicture,
-        coverPicture: user.coverPicture,
-        questions: user.questions,
-        likeQuestions: user.likeQuestions,
-        books: user.books,
-        followedBy: user.followedBy,
-        following: user.following,
-      })
-      for (let i = 0; i < user.followedBy.length; i++) {
-        const curr = user.followedBy[i]
-        if (curr.followerId === loginUser?.id) {
-          setIsFollow(true)
-          break
+    const { id } = router.query
+    if (typeof id === 'string') {
+      const fetchUser = async (userId: number) => {
+        const response: {
+          data: Omit<User_WithRelation, 'hashedPassword'>
+        } | null = await axios
+          .get(`${process.env.NEXT_PUBLIC_API_URL}/user/${userId}`)
+          .then((res) => res)
+          .catch((err) => {
+            console.error(err)
+            return null
+          })
+        if (response) {
+          const user = response.data
+          setUser({
+            id: user.id,
+            email: user.email,
+            userName: user.userName,
+            profilePicture: user.profilePicture,
+            coverPicture: user.coverPicture,
+            questions: user.questions,
+            likeQuestions: user.likeQuestions,
+            books: user.books,
+            followedBy: user.followedBy,
+            following: user.following,
+          })
+          for (let i = 0; i < user.followedBy.length; i++) {
+            const curr = user.followedBy[i]
+            if (curr.followerId === loginUser?.id) {
+              setIsFollow(true)
+              break
+            }
+          }
         }
       }
-    }
-    if (typeof id === 'string') {
       fetchUser(parseInt(id))
     }
-  }, [])
+  }, [router.query])
 
   if (user.id === 0)
     return (
@@ -227,32 +256,6 @@ const Profile: NextPage = () => {
         )}
       </div>
     </Layout>
-
-    /* <Layout>
-<section>
-  <p className={utilStyle.headingMd}>
-    Koheiです。プログラミングの学習をしています。
-  </p>
-</section>
-
-<section className={`${utilStyle.headingMd} ${utilStyle.padding1px}`}>
-  <h2>📝エンジニアのブログ</h2>
-  <div className={styles.grid}>
-    {allPostsData.map(({ id, title, date, thumbnail }) => (
-      <article key={id}>
-        <Link href={`/posts/${id}`}>
-          <img src={`${thumbnail}`} className={styles.thumbnailImage} />
-        </Link>
-        <Link href={`/posts/${id}`} className={utilStyle.boldText}>
-          {title}
-        </Link>
-        <br />
-        <small className={utilStyle.lightText}>{date}</small>
-      </article>
-    ))}
-  </div>
-</section>
-</Layout> */
   )
 }
 export default Profile

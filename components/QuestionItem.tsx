@@ -86,7 +86,7 @@ export const QuestionItem: FC<Props> = ({
         </div>
       </div>
       <div className="h-28  py-5 px-3">
-        <span>{title}</span>
+        <span className='text-lg'>{title}</span>
       </div>
 
       {/* float-leftでdivタグの中の要素を左に寄せる */}

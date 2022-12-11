@@ -42,10 +42,18 @@ export const QuestionCreateForm = () => {
             },
           })}
           onLabel={
-            <IconLock size={16} stroke={2.5} color={theme.colors["custom-yellow"][0]} />
+            <IconLock
+              size={16}
+              stroke={2.5}
+              color={theme.colors['custom-yellow'][0]}
+            />
           }
           offLabel={
-            <IconLockOpen size={16} stroke={2.5} color={theme.colors['custom-red'][1]} />
+            <IconLockOpen
+              size={16}
+              stroke={2.5}
+              color={theme.colors['custom-red'][1]}
+            />
           }
           checked={creatingQuestion.isPrivate}
           onChange={(e) =>
@@ -54,6 +62,7 @@ export const QuestionCreateForm = () => {
         />
         <TextInput
           className="h-20"
+          size="lg"
           mt="md"
           placeholder="今、気になっていることは何ですか？"
           variant="unstyled"

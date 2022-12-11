@@ -37,5 +37,28 @@ export const useMutateBook = () => {
       },
     }
   )
-  return { createBookMutation }
+  const deleteBookMutation = useMutation(
+    async (id: number) => {
+      await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/book/${id}`)
+    },
+    {
+      onSuccess: (_, variables) => {
+        const previousBooks = queryClient.getQueryData<Book_WithRelation[]>([
+          'books',
+        ])
+        if (previousBooks) {
+          queryClient.setQueryData(
+            ['books'],
+            previousBooks.filter((book) => book.id !== variables)
+          )
+        }
+      },
+      onError: (err: any) => {
+        if (err.response.status === 401 || err.response.status === 403) {
+          router.push('/')
+        }
+      },
+    }
+  )
+  return { createBookMutation, deleteBookMutation }
 }

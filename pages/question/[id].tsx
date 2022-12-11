@@ -1,15 +1,17 @@
-import { Loader } from '@mantine/core'
+import { Loader, ScrollArea } from '@mantine/core'
 import axios from 'axios'
 import { NextPage } from 'next'
 import { useRouter } from 'next/router'
-import React, { FC, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { BookList } from '../../components/BookList'
+import { BookShelf } from '../../components/BookShelf'
 import { Layout } from '../../components/Layout'
 import { QuestionEditForm } from '../../components/QuestionEditForm'
-import { EditingQuestion, Question_WithRelation } from '../../types'
+import { Question_WithRelation } from '../../types'
 const Question: NextPage = () => {
-  
-  const [editingQuestion, setEditingQuestion] = useState<Omit<Question_WithRelation, "createdAt">>({
+  const [editingQuestion, setEditingQuestion] = useState<
+    Omit<Question_WithRelation, 'createdAt'>
+  >({
     id: 0,
     updatedAt: new Date(),
     title: '',
@@ -55,15 +57,15 @@ const Question: NextPage = () => {
   }, [router.query])
   return (
     <Layout title="question">
-      {editingQuestion.id !== 0 ? (
-        <QuestionEditForm
-          question={editingQuestion}
-          update={updateEditingQuestion}
-        />
-      ) : (
-        <Loader />
-      )}
-      <BookList isMine={true} userId={editingQuestion.userId}/>
+          {editingQuestion.id !== 0 ? (
+            <QuestionEditForm
+              question={editingQuestion}
+              update={updateEditingQuestion}
+            />
+          ) : (
+            <Loader />
+          )}
+        
     </Layout>
   )
 }

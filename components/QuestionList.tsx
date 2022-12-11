@@ -30,24 +30,26 @@ export const QuestionList: FC<Props> = ({ isTimeline, isMine, userId }) => {
 
   //タイムライン、他の人のプロフィール、自分のプロフィールで場合分け
   useEffect(() => {
-    const fetchQuestions = async () => {
-      const response: { data: Question_WithRelation[] } = isTimeline
-        ? await axios.get(
-            `${process.env.NEXT_PUBLIC_API_URL}/question/all/timeline`
-          )
-        : !isMine
-        ? await axios.get(
-            `${process.env.NEXT_PUBLIC_API_URL}/question/all/profile/${userId}`
-          )
-        : typeof loginQuestions !== 'undefined'
-        ? { data: loginQuestions }
-        : { data: [] }
-      console.log(response)
-      const questions = response.data
-      setQuestions(questions)
+    if (userId !== 0) {
+      const fetchQuestions = async () => {
+        const response: { data: Question_WithRelation[] } = isTimeline
+          ? await axios.get(
+              `${process.env.NEXT_PUBLIC_API_URL}/question/all/timeline`
+            )
+          : !isMine
+          ? await axios.get(
+              `${process.env.NEXT_PUBLIC_API_URL}/question/all/profile/${userId}`
+            )
+          : typeof loginQuestions !== 'undefined'
+          ? { data: loginQuestions }
+          : { data: [] }
+        console.log(response)
+        const questions = response.data
+        setQuestions(questions)
+      }
+      fetchQuestions()
     }
-    fetchQuestions()
-  }, [])
+  }, [status, userId, isMine])
 
   if (status === 'loading') return <Loader />
   else
