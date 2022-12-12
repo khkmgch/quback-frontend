@@ -12,10 +12,10 @@ import TimeAgo from 'timeago-react'
 import * as timeago from 'timeago.js'
 import ja from 'timeago.js/lib/lang/ja'
 import { IconCopy } from '@tabler/icons'
+import { useRouter } from 'next/router'
+import { useGetUser } from '../hooks/useGetUser'
 
-//propsでid, title, description,isPrivate, booksを受け取るため、
-//FC<Omit<Question_WithRelation, 'createdAt' | 'updatedAt' | 'userId'>>の型宣言をする
-type Props = Omit<Question_WithRelation, 'updatedAt'> & {isMine: boolean}
+type Props = Omit<Question_WithRelation, 'updatedAt'> & { isMine: boolean }
 export const QuestionItem: FC<Props> = ({
   id,
   title,
@@ -25,16 +25,18 @@ export const QuestionItem: FC<Props> = ({
   books,
   likes,
   userId,
-  isMine
+  isMine,
 }) => {
   const PUBLIC_FOLDER = process.env.NEXT_PUBLIC_FOLDER
-  //useStoreからcreatingQuestionを取り出す
-  const { creatingQuestion } = useStore()
+  const router = useRouter()
+
   //useStoreからupdateCreatingQuestionを取り出す
   const updateCreating = useStore((state) => state.updateCreatingQuestion)
   const updateEditing = useStore((state) => state.updateEditingQuestion)
   const { deleteQuestionMutation } = useMutateQuestion()
-  
+
+  const { getUserById } = useGetUser()
+
   //Questionを作成したユーザー
   const [questionUser, setQuestionUser] = useState<{
     userName: string | null
@@ -46,25 +48,34 @@ export const QuestionItem: FC<Props> = ({
 
   timeago.register('ja', ja)
 
-  useEffect(() => {
-    // useEffect内で、非同期関数を作成して呼び出す必要がある
-    const fetchQuestionUser = async () => {
-      const reaponse: { data: Omit<User_WithRelation, 'hashedPassword'> } =
-        await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/user/${userId}`)
-      console.log(reaponse)
-      const user = reaponse.data
+  const fetchQuestionUser = async () => {
+    const response: { data: Omit<User_WithRelation, 'hashedPassword'> } | null =
+      await getUserById(userId)
+    if (response) {
+      return response.data
+    } else return null
+  }
+  const init = async () => {
+    const user = await fetchQuestionUser()
+    if (user) {
       setQuestionUser({
         userName: user.userName,
         profilePicture: user.profilePicture,
       })
     }
-    fetchQuestionUser()
+  }
+
+  useEffect(() => {
+    init()
   }, [])
 
   return (
     <List.Item className="m-4 flex h-56 w-192 flex-col bg-white p-4">
       <div className="flex  h-12 items-center ">
-        <Link href={`/profile/${userId}`} className="mx-5 flex items-center justify-center">
+        <Link
+          href={`/profile/${userId}`}
+          className="mx-5 flex items-center justify-center"
+        >
           <Image
             radius="xl"
             width={40}
@@ -80,16 +91,19 @@ export const QuestionItem: FC<Props> = ({
           />
         </Link>
         <div className="flex flex-col">
-          <h4 className='my-1 text-custom-blue-4'>{questionUser?.userName}</h4>
+          <h4 className="my-1 text-custom-blue-4">{questionUser?.userName}</h4>
 
-          <TimeAgo datetime={createdAt} locale="ja" className="text-custom-blue-2" />
+          <TimeAgo
+            datetime={createdAt}
+            locale="ja"
+            className="text-custom-blue-2"
+          />
         </div>
       </div>
       <div className="h-28  py-5 px-3">
-        <span className='text-lg'>{title}</span>
+        <span className="text-lg">{title}</span>
       </div>
 
-      {/* float-leftでdivタグの中の要素を左に寄せる */}
       <div className="flex h-8 items-start justify-end  pt-1">
         {isMine ? (
           <>
@@ -121,7 +135,8 @@ export const QuestionItem: FC<Props> = ({
             className="h-6 w-6 cursor-pointer text-gray-500 hover:text-teal-500"
             onClick={() => {
               updateCreating({ title: title, isPrivate: false })
-              window.scroll({ top: 0, behavior: 'smooth' })
+              router.push('/plaza')
+              // window.scroll({ top: 0, behavior: 'smooth' })
             }}
           />
         )}
@@ -129,15 +144,3 @@ export const QuestionItem: FC<Props> = ({
     </List.Item>
   )
 }
-// {allPostsData.map(({ id, title, date, thumbnail }) => (
-//   <article key={id}>
-//     <Link href={`/posts/${id}`}>
-//       <img src={`${thumbnail}`} className={styles.thumbnailImage} />
-//     </Link>
-//     <Link href={`/posts/${id}`} className={utilStyle.boldText}>
-//       {title}
-//     </Link>
-//     <br />
-//     <small className={utilStyle.lightText}>{date}</small>
-//   </article>
-// ))}

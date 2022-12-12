@@ -16,6 +16,7 @@ import { useState } from 'react'
 
 import * as Yup from 'yup'
 import { Layout } from '../../components/Layout'
+import { useAuth } from '../../hooks/useAuth'
 import { AuthForm } from '../../types'
 
 //入力フォームのバリデーションのため、Yupのスキーマを定義
@@ -43,19 +44,19 @@ const Auth: NextPage = () => {
     },
   })
 
+  const { register, login } = useAuth()
+
   const handleSubmit = async () => {
     try {
       //新規登録モードの場合、登録が成功したら続いてログインも行う
       if (isRegister) {
-        await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/signup`, {
-          email: form.values.email,
-          password: form.values.password,
-        })
+        register({ email: form.values.email, password: form.values.password })
       }
-      await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
+      login({
         email: form.values.email,
         password: form.values.password,
       })
+
       //useFormのresetメソッドで初期値にリセット
       form.reset()
       //ダッシュボードに遷移
@@ -123,7 +124,7 @@ const Auth: NextPage = () => {
                 type="submit"
                 styles={(theme) => ({
                   root: {
-                    backgroundColor:theme.colors['custom-blue'][3],
+                    backgroundColor: theme.colors['custom-blue'][3],
                     // border: 0,
                     // height: 42,
                     // paddingLeft: 20,

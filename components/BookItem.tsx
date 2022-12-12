@@ -12,7 +12,7 @@ import {
 import { useQueryUser } from '../hooks/useQueryUser'
 import axios from 'axios'
 import { Book } from '@prisma/client'
-import { IconArrowsLeftRight, IconExternalLink, IconTrash } from '@tabler/icons'
+import { IconArrowNarrowLeft, IconArrowsLeftRight, IconExternalLink, IconTrash } from '@tabler/icons'
 import { useMutateBook } from '../hooks/useMutateBook'
 
 type Props = Omit<Book_WithRelation, 'updatedAt'> & {
@@ -109,7 +109,7 @@ export const BookItem: FC<Props> = ({
 
         <Menu.Dropdown>
           <Menu.Item
-            icon={<IconArrowsLeftRight size={14} />}
+            icon={<IconArrowNarrowLeft size={14} />}
             onClick={() => createLinkToQuestion()}
           >
             追加

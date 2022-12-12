@@ -13,6 +13,7 @@ import {
   Tooltip,
   Legend,
 } from 'recharts'
+import { useGetQuestion } from '../hooks/useGetQuestions'
 import { useQueryQuestions } from '../hooks/useQueryQuestions'
 import { Question_WithRelation } from '../types'
 import DateChart from './DateChart'
@@ -30,26 +31,19 @@ const Charts: FC<Props> = ({ isMine, userId }) => {
 
   const [chart, setChart] = useState('date')
 
+  const { getQuestionsByUserId } = useGetQuestion()
+
   const fetchQuestions = async () => {
     let questions: Question_WithRelation[] = []
     if (!isMine) {
-      const response: { data: Question_WithRelation[] } | null = await axios
-        .get(
-          `${process.env.NEXT_PUBLIC_API_URL}/question/all/profile/${userId}`
-        )
-        .then((res) => res)
-        .catch((err) => {
-          console.error(err)
-          return null
-        })
+      const response: { data: Question_WithRelation[] } | null =
+        await getQuestionsByUserId(userId)
       if (response) {
         questions = response.data
       }
     } else if (loginQuestions !== undefined) {
       questions = loginQuestions
     }
-
-    console.log(questions)
     return questions
   }
   const init = async () => {
@@ -62,7 +56,7 @@ const Charts: FC<Props> = ({ isMine, userId }) => {
 
   return (
     <>
-      <div className="w-256 flex justify-center">
+      <div className="flex w-256 justify-center">
         <SegmentedControl
           fullWidth
           radius={10}

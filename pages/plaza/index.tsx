@@ -1,17 +1,19 @@
-import { LogoutIcon } from '@heroicons/react/solid'
-import axios from 'axios'
 import { NextPage } from 'next'
-import { useRouter } from 'next/router'
 import { Layout } from '../../components/Layout'
-import { UserInfo } from '../../components/UserInfo'
-import { useQueryClient } from '@tanstack/react-query'
 import { QuestionCreateForm } from '../../components/QuestionCreateForm'
 import { QuestionList } from '../../components/QuestionList'
 import { useQueryUser } from '../../hooks/useQueryUser'
-import { Loader } from '@mantine/core'
+import { Loader, Switch, useMantineTheme } from '@mantine/core'
+import { QuestionAllList } from '../../components/QuestionAllList'
+import { IconUserPlus } from '@tabler/icons'
+import { useToggle } from '../../hooks/useToggle'
 
 const Plaza: NextPage = () => {
+  const theme = useMantineTheme()
   const { data: user, status } = useQueryUser()
+
+  const { state, toggle } = useToggle()
+
   if (status === 'loading') {
     return (
       <Layout title="Plaza">
@@ -22,7 +24,29 @@ const Plaza: NextPage = () => {
     return (
       <Layout title="Plaza">
         <QuestionCreateForm />
-        {typeof user?.id !== 'undefined' ? (
+        <Switch
+          size="md"
+          color={theme.colorScheme === 'dark' ? 'gray' : 'indigo'}
+          onLabel={
+            <IconUserPlus
+              size={16}
+              stroke={2.5}
+              color={theme.colors.orange[4]}
+            />
+          }
+          offLabel={
+            <IconUserPlus
+              size={16}
+              stroke={2.5}
+              color={theme.colors.indigo[6]}
+            />
+          }
+          checked={state}
+          onChange={toggle}
+        />
+        {state ? (
+          <QuestionAllList />
+        ) : typeof user?.id !== 'undefined' ? (
           <QuestionList isTimeline={true} isMine={true} userId={user?.id} />
         ) : (
           <Loader />

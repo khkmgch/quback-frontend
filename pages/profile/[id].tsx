@@ -1,6 +1,8 @@
 import {
   Center,
+  FileInput,
   Loader,
+  Menu,
   SegmentedControl,
   Switch,
   useMantineTheme,
@@ -9,12 +11,14 @@ import { IconBook, IconChartDots3, IconStack2, IconStar } from '@tabler/icons'
 import axios from 'axios'
 import { NextPage } from 'next'
 import { useRouter } from 'next/router'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { BookShelf } from '../../components/BookShelf'
 import Charts from '../../components/Charts'
 import { Layout } from '../../components/Layout'
 import { QuestionList } from '../../components/QuestionList'
+import { useMutateUser } from '../../hooks/useMutateUser'
 import { useQueryUser } from '../../hooks/useQueryUser'
+import { useToggle } from '../../hooks/useToggle'
 import { User_WithRelation } from '../../types'
 
 //SSGの場合
@@ -65,8 +69,8 @@ const Profile: NextPage = () => {
     followedBy: [],
     following: [],
   })
-
-  const [isFollow, setIsFollow] = useState(false)
+  const { state: isFollow, setState, toggle } = useToggle()
+  //フォローとフォロー解除のメソッド
   const handleFollow = async () => {
     const userId = loginUser?.id
     const targetUserId = user.id
@@ -80,30 +84,37 @@ const Profile: NextPage = () => {
           `${process.env.NEXT_PUBLIC_API_URL}/user/${targetUserId}/unfollow`
         )
       }
-      setIsFollow((prevState) => !prevState)
+      toggle()
+      window.location.reload()
     }
   }
-  // useEffect(() => {
-  //   const { id } = router.query
-  //   if (typeof id === 'string') {
-  //     type FetchQuestion = (id: string) => Promise<void>
-  //     const fetchQuestion: FetchQuestion = async (id: string) => {
-  //       const response: { data: Question_WithRelation } | null = await axios
-  //         .get<Question_WithRelation>(
-  //           `${process.env.NEXT_PUBLIC_API_URL}/question/${id}`
-  //         )
-  //         .then((res) => res)
-  //         .catch((err) => {
-  //           console.error(err)
-  //           return null
-  //         })
-  //       if (response) {
-  //         setEditingQuestion(response.data)
-  //       }
-  //     }
-  //     fetchQuestion(id)
-  //   }
-  // }, [router.query])
+  const { updateUserMutation } = useMutateUser()
+  const handleCoverPicture = async (file: File | null) => {
+    if (file) {
+      const data = new FormData()
+
+      //ファイル名に時間を足すことで名前の重複を防ぐ
+      const fileName = Date.now() + file.name
+      //dataにkeyとvalueを追加する
+      data.append('name', fileName)
+      data.append('file', file)
+
+      try {
+        //画像APIを叩く
+        //アップロード用のapiとメソッドを開発
+
+        //ユーザー情報の更新
+        updateUserMutation.mutate({
+          id: user.id,
+          userName: user.userName,
+          profilePicture: user.profilePicture || '',
+          coverPicture: fileName,
+        })
+      } catch (err) {
+        console.log(err)
+      }
+    }
+  }
 
   useEffect(() => {
     const { id } = router.query
@@ -135,7 +146,7 @@ const Profile: NextPage = () => {
           for (let i = 0; i < user.followedBy.length; i++) {
             const curr = user.followedBy[i]
             if (curr.followerId === loginUser?.id) {
-              setIsFollow(true)
+              setState(true)
               break
             }
           }
@@ -155,7 +166,33 @@ const Profile: NextPage = () => {
   return (
     <Layout title="Profile">
       <div className="relative h-60 w-256">
-        <img
+        <Menu shadow="md" position="right-start" offset={-20} withArrow>
+          <Menu.Target>
+            <img
+              src={
+                user?.coverPicture
+                  ? PUBLIC_FOLDER + user.coverPicture
+                  : PUBLIC_FOLDER + '/cover/tree.jpeg'
+              }
+              alt=""
+              className="h-48 w-full object-cover"
+            />
+          </Menu.Target>
+
+          <Menu.Dropdown>
+            <Menu.Item>
+              <FileInput
+                placeholder="カバー画像を変更"
+                size="md"
+                variant="unstyled"
+                accept="image/png,image/jpeg"
+                onChange={(file) => handleCoverPicture(file)}
+              />
+            </Menu.Item>
+          </Menu.Dropdown>
+        </Menu>
+
+        {/* <img
           src={
             user?.coverPicture
               ? PUBLIC_FOLDER + user.coverPicture
@@ -163,7 +200,7 @@ const Profile: NextPage = () => {
           }
           alt=""
           className="h-48 w-full object-cover"
-        />
+        /> */}
         <img
           src={
             user?.profilePicture
@@ -177,24 +214,27 @@ const Profile: NextPage = () => {
         />
       </div>
       <h4 className="mb-0">{user?.userName}</h4>
+
       <div className="flex w-72 justify-between">
         <h5>フォロー: {user.following.length}</h5>
         <h5>フォロワー: {user.followedBy.length}</h5>
       </div>
 
       {loginUser?.id !== user.id && (
-        <Switch
-          size="md"
-          color={theme.colorScheme === 'dark' ? 'gray' : 'indigo'}
-          onLabel={
-            <IconStar size={16} stroke={2.5} color={theme.colors.orange[4]} />
-          }
-          offLabel={
-            <IconStar size={16} stroke={2.5} color={theme.colors.indigo[6]} />
-          }
-          checked={isFollow}
-          onChange={() => handleFollow()}
-        />
+        <div className="mb-10 ">
+          <Switch
+            size="md"
+            color={theme.colorScheme === 'dark' ? 'gray' : 'indigo'}
+            onLabel={
+              <IconStar size={16} stroke={2.5} color={theme.colors.orange[4]} />
+            }
+            offLabel={
+              <IconStar size={16} stroke={2.5} color={theme.colors.indigo[6]} />
+            }
+            checked={isFollow}
+            onChange={() => handleFollow()}
+          />
+        </div>
       )}
 
       <div className="w-96">
