@@ -12,7 +12,12 @@ import {
 import { useQueryUser } from '../hooks/useQueryUser'
 import axios from 'axios'
 import { Book } from '@prisma/client'
-import { IconArrowNarrowLeft, IconArrowsLeftRight, IconExternalLink, IconTrash } from '@tabler/icons'
+import {
+  IconArrowNarrowLeft,
+  IconArrowsLeftRight,
+  IconExternalLink,
+  IconTrash,
+} from '@tabler/icons'
 import { useMutateBook } from '../hooks/useMutateBook'
 
 type Props = Omit<Book_WithRelation, 'updatedAt'> & {
@@ -69,7 +74,13 @@ export const BookItem: FC<Props> = ({
         <Menu.Target>
           <div className="my-3 cursor-pointer p-1 drop-shadow-md hover:contrast-200 hover:drop-shadow-2xl">
             <div className="flex h-full items-center justify-center">
-              <img src={imgLink || ''} alt="" className="object-cover" />
+              {imgLink === '' ? (
+                <div className="border-2 border-dotted border-gray-400 bg-slate-100">
+                  {title}
+                </div>
+              ) : (
+                <img src={imgLink || ''} alt="" className="object-cover" />
+              )}
             </div>
           </div>
         </Menu.Target>
@@ -102,7 +113,13 @@ export const BookItem: FC<Props> = ({
         <Menu.Target>
           <div className="my-3 cursor-pointer p-1 drop-shadow-md hover:contrast-200 hover:drop-shadow-2xl">
             <div className="flex h-full items-center justify-center">
-              <img src={imgLink || ''} alt="" className="object-cover" />
+              {imgLink === '' ? (
+                <div className="border-2 border-dotted border-gray-400 bg-slate-100">
+                  {title}
+                </div>
+              ) : (
+                <img src={imgLink || ''} alt="" className="object-cover" />
+              )}
             </div>
           </div>
         </Menu.Target>
@@ -124,7 +141,17 @@ export const BookItem: FC<Props> = ({
         <Menu.Target>
           <div className="my-3 cursor-pointer p-1 drop-shadow-md hover:contrast-200 hover:drop-shadow-2xl">
             <div className="flex h-full items-center justify-center">
-              <img src={imgLink || ''} alt="" className="object-cover" />
+              {imgLink === '' ? (
+                <div className="border-2 border-dotted border-gray-400 bg-slate-100">
+                  {title}
+                </div>
+              ) : (
+                <img
+                  src={imgLink || ''}
+                  alt={title || 'No Image'}
+                  className="object-cover"
+                />
+              )}
             </div>
           </div>
         </Menu.Target>
@@ -157,7 +184,13 @@ export const BookItem: FC<Props> = ({
         <Menu.Target>
           <div className="my-3 cursor-pointer p-1 drop-shadow-md hover:contrast-200 hover:drop-shadow-2xl">
             <div className="flex h-full items-center justify-center">
-              <img src={imgLink || ''} alt="" className="object-cover" />
+              {imgLink === '' ? (
+                <div className="border-2 border-dotted border-gray-400 bg-slate-100">
+                  {title}
+                </div>
+              ) : (
+                <img src={imgLink || ''} alt="" className="object-cover" />
+              )}
             </div>
           </div>
         </Menu.Target>

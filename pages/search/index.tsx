@@ -4,6 +4,7 @@ import { NextPage } from 'next'
 import { FormEvent, useEffect, useRef, useState } from 'react'
 import { Layout } from '../../components/Layout'
 import { SearchBookItem } from '../../components/SearchBookItem'
+import { useQueryBooks } from '../../hooks/useQueryBooks'
 
 const Search: NextPage = () => {
   const keywordRef = useRef<HTMLInputElement>(null)
@@ -37,7 +38,6 @@ const Search: NextPage = () => {
       fetchBooks(keywordRef.current?.value)
     }
   }
-  //   useEffect(() => {}, [data])
   return (
     <Layout title="Search">
       <div>

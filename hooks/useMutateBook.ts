@@ -14,11 +14,15 @@ export const useMutateBook = () => {
         `${process.env.NEXT_PUBLIC_API_URL}/book`,
         book
       )
-      return res.data
+      if (!res.data) {
+        alert('既に本棚に存在します。')
+        throw new Error('既に本棚に存在します。')
+      } else return res.data
     },
     {
       onSuccess: (res) => {
-        //既存のキャッシュ(questions)をqueryClientのgetQueryDataを使って取得
+        console.log('res: ', res.data)
+        //既存のキャッシュをqueryClientのgetQueryDataを使って取得
         const previousBooks = queryClient.getQueryData<Book_WithRelation[]>([
           'books',
         ])
@@ -27,8 +31,7 @@ export const useMutateBook = () => {
           queryClient.setQueryData(['books'], [res, ...previousBooks])
         }
 
-        //ページをリロードする
-        window.location.reload()
+        alert('本棚に追加しました。')
       },
       onError: (err: any) => {
         if (err.response.status === 401 || err.response.status === 403) {
@@ -52,6 +55,8 @@ export const useMutateBook = () => {
             previousBooks.filter((book) => book.id !== variables)
           )
         }
+        //ページをリロードする
+        // window.location.reload()
       },
       onError: (err: any) => {
         if (err.response.status === 401 || err.response.status === 403) {

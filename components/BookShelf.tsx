@@ -46,7 +46,7 @@ export const BookShelf: FC<Props> = ({ userId, isMine, questionId }) => {
 
   useEffect(() => {
     init()
-  }, [status])
+  }, [status, loginShelf])
 
   if (status === 'loading') return <Loader />
   //プロフィール本棚閲覧の場合

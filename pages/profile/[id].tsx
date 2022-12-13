@@ -17,42 +17,20 @@ import Charts from '../../components/Charts'
 import { Layout } from '../../components/Layout'
 import { QuestionList } from '../../components/QuestionList'
 import { useMutateUser } from '../../hooks/useMutateUser'
+import { usePostFile } from '../../hooks/usePostFile'
 import { useQueryUser } from '../../hooks/useQueryUser'
 import { useToggle } from '../../hooks/useToggle'
 import { User_WithRelation } from '../../types'
-
-//SSGの場合
-//外部から１回だけデータを持ってくる
-//getStaticPropsという名前はnextjs側が用意した名前なので合わせる
-// export async function getStaticProps() {
-//     const allPostsData = getPostsData();
-
-//     //getStaticProps特有の書き方
-//     //return して、Homeコンポーネントに１度だけ渡す
-//     return {
-//       props: {
-//         allPostsData,
-//       },
-//     };
-//   }
-
-//SSRの場合
-//contextにはユーザーがリクエストした情報が入る
-// export async function getServerSideProps(context) {
-//   return {
-//     props: {
-//       //コンポーネントに渡すためのprops
-//     },
-//   };
-// }
 
 const Profile: NextPage = () => {
   const PUBLIC_FOLDER = process.env.NEXT_PUBLIC_FOLDER
   const theme = useMantineTheme()
   const router = useRouter()
 
+  //投稿、本棚、グラフの切り替えのための表示モードdisplay
   const [display, setDisplay] = useState('question')
 
+  //ログインしているユーザー
   const { data: loginUser, status } = useQueryUser()
 
   const [user, setUser] = useState<
@@ -69,6 +47,7 @@ const Profile: NextPage = () => {
     followedBy: [],
     following: [],
   })
+  //フォローしているかどうかisFollow
   const { state: isFollow, setState, toggle } = useToggle()
   //フォローとフォロー解除のメソッド
   const handleFollow = async () => {
@@ -85,30 +64,40 @@ const Profile: NextPage = () => {
         )
       }
       toggle()
-      window.location.reload()
     }
   }
+  //画像ファイルをアップロードするメソッド
+  const { fileUpload } = usePostFile()
+  //ユーザー情報を更新するMutation
   const { updateUserMutation } = useMutateUser()
+
+  const [coverPicture, setCoverPicture] = useState<File | null>(null)
+  //カバー画像を変更するメソッド
   const handleCoverPicture = async (file: File | null) => {
-    if (file) {
+    setCoverPicture(file)
+    if (file !== null) {
       const data = new FormData()
 
       //ファイル名に時間を足すことで名前の重複を防ぐ
-      const fileName = Date.now() + file.name
+      // const fileName = Date.now() + file.name
       //dataにkeyとvalueを追加する
-      data.append('name', fileName)
+      // data.append('name', fileName)
       data.append('file', file)
+      console.log('data: ', data)
 
       try {
         //画像APIを叩く
         //アップロード用のapiとメソッドを開発
-
+        const uploaded = await fileUpload(data)
+        const coverPictureName = uploaded?.data.fileName
+        console.log('uploaded: ', uploaded)
+        console.log('coverPictureName: ', uploaded?.data.fileName)
         //ユーザー情報の更新
         updateUserMutation.mutate({
           id: user.id,
           userName: user.userName,
           profilePicture: user.profilePicture || '',
-          coverPicture: fileName,
+          coverPicture: coverPictureName,
         })
       } catch (err) {
         console.log(err)
@@ -154,7 +143,7 @@ const Profile: NextPage = () => {
       }
       fetchUser(parseInt(id))
     }
-  }, [router.query])
+  }, [router.query, isFollow, loginUser])
 
   if (user.id === 0)
     return (
@@ -171,7 +160,7 @@ const Profile: NextPage = () => {
             <img
               src={
                 user?.coverPicture
-                  ? PUBLIC_FOLDER + user.coverPicture
+                  ? PUBLIC_FOLDER + '/' + user.coverPicture
                   : PUBLIC_FOLDER + '/cover/tree.jpeg'
               }
               alt=""
@@ -180,15 +169,16 @@ const Profile: NextPage = () => {
           </Menu.Target>
 
           <Menu.Dropdown>
-            <Menu.Item>
-              <FileInput
-                placeholder="カバー画像を変更"
-                size="md"
-                variant="unstyled"
-                accept="image/png,image/jpeg"
-                onChange={(file) => handleCoverPicture(file)}
-              />
-            </Menu.Item>
+            {/* <Menu.Item> */}
+            <FileInput
+              placeholder="カバー画像を変更"
+              size="md"
+              variant="unstyled"
+              accept="image/png,image/jpeg"
+              value={coverPicture}
+              onChange={(file) => handleCoverPicture(file)}
+            />
+            {/* </Menu.Item> */}
           </Menu.Dropdown>
         </Menu>
 

@@ -31,7 +31,6 @@ export const useMutateUser = () => {
         if (previousUser) {
           queryClient.setQueryData(['user'], res)
         }
-        window.location.reload()
       },
       onError: (err: any) => {
         if (err.response.status === 401 || err.response.status === 403) {
