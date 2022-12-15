@@ -3,6 +3,18 @@ import React from 'react'
 import { Question_WithRelation } from '../types'
 
 export const useGetQuestion = () => {
+  const getQuestionById = async (id: number) => {
+    const response: { data: Question_WithRelation } | null = await axios
+      .get<Question_WithRelation>(
+        `${process.env.NEXT_PUBLIC_API_URL}/question/${id}`
+      )
+      .then((res) => res)
+      .catch((err) => {
+        console.error(err)
+        return null
+      })
+    return response
+  }
   //ログインしているユーザーのタイムラインに表示するクエスチョンを全て取得
   const getTimelineQuestions = async () => {
     const response: { data: Question_WithRelation[] } | null = await axios
@@ -36,5 +48,10 @@ export const useGetQuestion = () => {
     return response
   }
 
-  return { getTimelineQuestions, getQuestionsByUserId, getAllQuestions }
+  return {
+    getTimelineQuestions,
+    getQuestionsByUserId,
+    getAllQuestions,
+    getQuestionById,
+  }
 }

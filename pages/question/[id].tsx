@@ -7,8 +7,14 @@ import { BookList } from '../../components/BookList'
 import { BookShelf } from '../../components/BookShelf'
 import { Layout } from '../../components/Layout'
 import { QuestionEditForm } from '../../components/QuestionEditForm'
+import { useGetQuestion } from '../../hooks/useGetQuestion'
 import { Question_WithRelation } from '../../types'
 const Question: NextPage = () => {
+  const router = useRouter()
+
+  //状態
+
+  //現在編集中のQuestionの状態
   const [editingQuestion, setEditingQuestion] = useState<
     Omit<Question_WithRelation, 'createdAt'>
   >({
@@ -21,8 +27,10 @@ const Question: NextPage = () => {
     books: [],
     likes: [],
   })
-  const router = useRouter()
 
+  //メソッド
+
+  //editingQuestionを更新するメソッド
   const updateEditingQuestion = (payload: any) =>
     setEditingQuestion({
       id: payload.id,
@@ -34,38 +42,33 @@ const Question: NextPage = () => {
       books: payload.books,
       likes: payload.likes,
     })
+
+  //idでQuestionを取得するメソッド
+  const { getQuestionById } = useGetQuestion()
+
+  //コンポーネントの状態を初期設定するメソッド
+  const init = async (id: string | string[] | undefined) => {
+    if (typeof id !== 'string') return
+    const response: { data: Question_WithRelation } | null =
+      await getQuestionById(parseInt(id))
+    if (response) {
+      setEditingQuestion(response.data)
+    }
+  }
   useEffect(() => {
     const { id } = router.query
-    if (typeof id === 'string') {
-      type FetchQuestion = (id: string) => Promise<void>
-      const fetchQuestion: FetchQuestion = async (id: string) => {
-        const response: { data: Question_WithRelation } | null = await axios
-          .get<Question_WithRelation>(
-            `${process.env.NEXT_PUBLIC_API_URL}/question/${id}`
-          )
-          .then((res) => res)
-          .catch((err) => {
-            console.error(err)
-            return null
-          })
-        if (response) {
-          setEditingQuestion(response.data)
-        }
-      }
-      fetchQuestion(id)
-    }
+    init(id)
   }, [router.query])
   return (
     <Layout title="question">
-          {editingQuestion.id !== 0 ? (
-            <QuestionEditForm
-              question={editingQuestion}
-              update={updateEditingQuestion}
-            />
-          ) : (
-            <Loader />
-          )}
-        
+      {editingQuestion.id !== 0 ? (
+        <QuestionEditForm
+          question={editingQuestion}
+          update={updateEditingQuestion}
+        />
+      ) : (
+        <Loader />
+      )}
     </Layout>
   )
 }

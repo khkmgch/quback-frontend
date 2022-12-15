@@ -80,10 +80,10 @@ export const QuestionItem: FC<Props> = ({
             radius="xl"
             width={40}
             height={40}
-            fit="contain"
+            fit="cover"
             src={
               questionUser?.profilePicture
-                ? PUBLIC_FOLDER + questionUser.profilePicture
+                ? PUBLIC_FOLDER + "/" + questionUser.profilePicture
                 : PUBLIC_FOLDER + '/person/noAvatar.png'
             }
             alt=""

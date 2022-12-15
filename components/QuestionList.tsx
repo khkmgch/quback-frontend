@@ -6,7 +6,7 @@ import axios from 'axios'
 import { useQueryQuestions } from '../hooks/useQueryQuestions'
 import { stat } from 'fs'
 import { useQueryUser } from '../hooks/useQueryUser'
-import { useGetQuestion } from '../hooks/useGetQuestions'
+import { useGetQuestion } from '../hooks/useGetQuestion'
 
 type Props = {
   isTimeline: boolean

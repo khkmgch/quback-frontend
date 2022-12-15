@@ -73,7 +73,7 @@ const HeaderCustom: FC<Props> = ({ mode = 'Home' }) => {
               <Image
                 src={
                   user?.profilePicture
-                    ? PUBLIC_FOLDER + user.profilePicture
+                    ? PUBLIC_FOLDER + "/" + user.profilePicture
                     : PUBLIC_FOLDER + '/person/noAvatar.png'
                 }
                 alt=""
@@ -81,7 +81,7 @@ const HeaderCustom: FC<Props> = ({ mode = 'Home' }) => {
                 radius="xl"
                 width={30}
                 height={30}
-                fit="contain"
+                fit="cover"
               />
             </Link>
             <Link href="/search" className="flex items-center justify-center">

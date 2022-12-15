@@ -13,7 +13,7 @@ import {
   Tooltip,
   Legend,
 } from 'recharts'
-import { useGetQuestion } from '../hooks/useGetQuestions'
+import { useGetQuestion } from '../hooks/useGetQuestion'
 import { useQueryQuestions } from '../hooks/useQueryQuestions'
 import { Question_WithRelation } from '../types'
 import DateChart from './DateChart'

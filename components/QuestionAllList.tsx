@@ -1,7 +1,7 @@
 import { List, Loader } from '@mantine/core'
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
-import { useGetQuestion } from '../hooks/useGetQuestions'
+import { useGetQuestion } from '../hooks/useGetQuestion'
 import { useQueryUser } from '../hooks/useQueryUser'
 import { Question_WithRelation } from '../types'
 import { QuestionItem } from './QuestionItem'
