@@ -1,21 +1,16 @@
-//全てのページで共通して使えるレイアウトを作成する
-
-//FC: ファンクショナルコンポーネントの型
-//ReactNode: childrenの型
 import Head from 'next/head'
 import { FC, ReactNode } from 'react'
-
 import { AppShell } from '@mantine/core'
 import HeaderCustom from './HeaderCustom'
 import FooterCustom from './FooterCustom'
 
-//Layoutコンポーネントが受け取るpropsの型を定義(ページのタイトルとchildrenを受け取る)
+//ページのタイトルとchildren
 type Props = {
   title: string
   children: ReactNode
 }
-//FC<Props>で型を適用
-//デフォルトのタイトルは'Nextjs'に設定
+//全てのページで共通して使えるレイアウトを作成
+//デフォルトのタイトルは'Home'に設定
 export const Layout: FC<Props> = ({ children, title = 'Home' }) => {
   return (
     <AppShell

@@ -25,6 +25,11 @@ module.exports = {
         'custom-green-0': '#E6EBE4',
         'custom-orange-0': "#EBB52F"
       },
+      rotate: {
+        '135': '135deg',
+        '225': "225deg",
+        '270': "270deg"
+      }
     },
   },
   plugins: [],

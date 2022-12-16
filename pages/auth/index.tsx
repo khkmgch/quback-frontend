@@ -1,4 +1,4 @@
-import { ExclamationCircleIcon, ShieldCheckIcon } from '@heroicons/react/solid'
+import { ExclamationCircleIcon } from '@heroicons/react/solid'
 import {
   Alert,
   Anchor,
@@ -8,15 +8,12 @@ import {
   TextInput,
 } from '@mantine/core'
 import { useForm, yupResolver } from '@mantine/form'
-import { IconDatabase } from '@tabler/icons'
-import axios from 'axios'
 import { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
-
 import * as Yup from 'yup'
 import { Layout } from '../../components/Layout'
-import { useAuth } from '../../hooks/useAuth'
+import { useAuth } from '../../hooks/auth/useAuth'
 import { AuthForm } from '../../types'
 
 //入力フォームのバリデーションのため、Yupのスキーマを定義
@@ -28,14 +25,19 @@ const schema = Yup.object().shape({
 })
 
 const Auth: NextPage = () => {
-  //ルーティングのために、useRouterを使用
+  //ルーティング
   const router = useRouter()
+
+  //状態
+
   //ログインモードと新規登録モードを切り替えるためのisRegister(デフォルトはfalseでログインモード)
   const [isRegister, setIsRegister] = useState(false)
+
+  //エラーメッセージ
   const [error, setError] = useState('')
 
   //mantineのuseForm
-  //ジェネリクスでフォームのデータ型（types/index.tsで定義したAuthForm）に指定する
+  //ジェネリクスでフォームのデータ型（types/index.tsで定義したAuthForm）に指定
   const form = useForm<AuthForm>({
     validate: yupResolver(schema),
     initialValues: {
@@ -44,6 +46,16 @@ const Auth: NextPage = () => {
     },
   })
 
+  //メソッド
+
+  //新規登録・ログインを切り替えるメソッド
+  const switchMode = () => {
+    setIsRegister((prevState) => !prevState)
+    //登録とログインを切り替えた時に何らかのエラーが発生していれば、エラーをリセット
+    setError('')
+  }
+
+  //新規登録とログインのメソッド
   const { register, login } = useAuth()
 
   const handleSubmit = async () => {
@@ -68,9 +80,9 @@ const Auth: NextPage = () => {
   }
   return (
     <Layout title="Auth">
-      <div className="flex h-screen w-screen items-center justify-center ">
-        <div className="flex flex-col items-center justify-center rounded-md bg-white p-10">
-          {/* <ShieldCheckIcon className="h-16 w-16 text-blue-500" /> */}
+      <div className="flex flex-col h-screen w-screen items-center justify-center ">
+        <div className='text-3xl font-semibold mb-5 '>Qu Back へようこそ</div>
+        <div className="flex flex-col items-center justify-center rounded-md bg-white p-10 ">
           {/* errorに何らかの文字列が存在する場合にアラートを表示 */}
           {error && (
             <Alert
@@ -87,6 +99,7 @@ const Auth: NextPage = () => {
           <form onSubmit={form.onSubmit(handleSubmit)}>
             <TextInput
               mt="md"
+              size='md'
               id="email"
               label="メールアドレス"
               withAsterisk
@@ -96,6 +109,7 @@ const Auth: NextPage = () => {
             />
             <PasswordInput
               mt="md"
+              size='md'
               id="password"
               label="パスワード"
               withAsterisk
@@ -108,12 +122,10 @@ const Auth: NextPage = () => {
                 // テキストをクリックできるようにしたいのでcomponentとtypeをbuttonに設定
                 component="button"
                 type="button"
-                size="xs"
+                size='sm'
                 className="text-custom-blue-2"
                 onClick={() => {
-                  setIsRegister(!isRegister)
-                  //登録とログインを切り替えた時に何らかのエラーが発生していれば、エラーをリセットする
-                  setError('')
+                  switchMode()
                 }}
               >
                 {isRegister
@@ -125,10 +137,6 @@ const Auth: NextPage = () => {
                 styles={(theme) => ({
                   root: {
                     backgroundColor: theme.colors['custom-blue'][3],
-                    // border: 0,
-                    // height: 42,
-                    // paddingLeft: 20,
-                    // paddingRight: 20,
 
                     '&:hover': {
                       backgroundColor: theme.fn.darken('#747578', 0.15),

@@ -1,38 +1,41 @@
-import { Button, Group, List, TextInput } from '@mantine/core'
-import axios from 'axios'
+import { Button, List, TextInput } from '@mantine/core'
 import { NextPage } from 'next'
-import { FormEvent, useEffect, useRef, useState } from 'react'
+import { FormEvent, RefObject, useEffect, useRef, useState } from 'react'
 import { Layout } from '../../components/Layout'
-import { SearchBookItem } from '../../components/SearchBookItem'
-import { useQueryBooks } from '../../hooks/useQueryBooks'
+import { SearchBookItem } from '../../components/Book/SearchBookItem/SearchBookItem'
+import { useGetBook } from '../../hooks/book/useGetBook'
+import { SearchedData } from '../../types'
 
 const Search: NextPage = () => {
+  //状態
+
+  //検索キーワード
   const keywordRef = useRef<HTMLInputElement>(null)
 
-  type Data = {
-    kind: string
-    totalItems: number
-    items: Array<any>
-  }
-  const [data, setData] = useState<Data>({
+  //検索結果
+  const [searchedData, setSearchedData] = useState<SearchedData>({
     kind: '',
     totalItems: 0,
     items: [],
   })
 
+  //メソッド
+
+  //キーワードで本を検索するメソッド
+  const { searchBooksByKeyword } = useGetBook()
+
+  //検索結果を状態:searchedDataにセットするメソッド
   const fetchBooks = async (keyword: string) => {
-    const reaponse: {
-      data: Data
-    } = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL}/book/search/${keyword}`
-    )
-    console.log('キーワード：', keyword)
-    // console.log('レスポンスデータ：', reaponse)
-    const data = reaponse.data
-    setData(data)
-    console.log('本のデータ：', data)
+    const response = await searchBooksByKeyword(keyword)
+    if (response) {
+      setSearchedData(response)
+    }
   }
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  //フォームのsubmitメソッド
+  const handleSubmit = (
+    e: FormEvent<HTMLFormElement>,
+    keywordRef: RefObject<HTMLInputElement>
+  ) => {
     e.preventDefault()
     if (keywordRef.current !== null) {
       fetchBooks(keywordRef.current?.value)
@@ -44,7 +47,7 @@ const Search: NextPage = () => {
         <h3>本の検索</h3>
       </div>
       <form
-        onSubmit={(e) => handleSubmit(e)}
+        onSubmit={(e) => handleSubmit(e, keywordRef)}
         className="flex items-center justify-center"
       >
         <TextInput
@@ -55,15 +58,13 @@ const Search: NextPage = () => {
           ref={keywordRef}
           className="mr-5 w-96"
         />
-        {/* <Group position="right" mt="md"> */}
         <Button type="submit" variant="light" color="teal">
           探す
         </Button>
-        {/* </Group> */}
       </form>
 
-      <List my="lg" spacing="sm" size="sm" className="list-none">
-        {data.items.map((item) => (
+      <List my="lg" spacing="sm" className="list-none ">
+        {searchedData.items.map((item) => (
           <SearchBookItem
             key={item.id.toString()}
             id={item.id}

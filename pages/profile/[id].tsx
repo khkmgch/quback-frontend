@@ -13,14 +13,14 @@ import { IconBook, IconChartDots3, IconStack2, IconStar } from '@tabler/icons'
 import { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import { BookShelf } from '../../components/BookShelf'
-import Charts from '../../components/Charts'
+import { BookShelf } from '../../components/Book/BookShelf/BookShelf'
+import Charts from '../../components/Chart/Charts/Charts'
 import { Layout } from '../../components/Layout'
-import { QuestionList } from '../../components/QuestionList'
-import { useGetUser } from '../../hooks/useGetUser'
-import { useQueryUser } from '../../hooks/useQueryUser'
+import { QuestionList } from '../../components/Question/QuestionList/QuestionList'
+import { useGetUser } from '../../hooks/user/useGetUser'
+import { useQueryUser } from '../../hooks/user/useQueryUser'
 import { useToggle } from '../../hooks/useToggle'
-import { useUpdateUser } from '../../hooks/useUpdateUser'
+import { useUpdateUser } from '../../hooks/user/useUpdateUser'
 import { User_WithRelation } from '../../types'
 import { profileUtils } from './utils'
 
@@ -119,7 +119,7 @@ const Profile: NextPage = () => {
 
   return (
     <Layout title="Profile">
-      <div className="relative h-60 w-256">
+      <div className="relative h-60 w-full lg:w-256">
         <Menu shadow="md" position="right-start" offset={-20} withArrow>
           <Menu.Target>
             <img
@@ -277,7 +277,7 @@ const Profile: NextPage = () => {
           ]}
         />
       </div>
-      <div className="mt-10">
+      <div className="mt-10 w-full  flex justify-center items-center">
         {loginUser?.id === user.id ? (
           display === 'question' ? (
             <QuestionList isTimeline={false} isMine={true} userId={user.id} />

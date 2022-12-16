@@ -4,18 +4,20 @@ import create from 'zustand'
 import { CreatingQuestion, EditingQuestion } from '../types'
 
 type State = {
+  //新規作成中のQuestion
   creatingQuestion: CreatingQuestion
   updateCreatingQuestion: (payload: CreatingQuestion) => void
   resetCreatingQuestion: () => void
 
+  //編集中のQuestion
   editingQuestion: EditingQuestion
   updateEditingQuestion: (payload: EditingQuestion) => void
-  // resetEditedQuestion: () => void
 }
 
 //ステートcreatingQuestion,editingQuestion(初期値)
 //更新関数updateEditingQuestionとresetEditingQuestionを定義
 const useStore = create<State>((set) => ({
+  //新規作成中のQuestion
   creatingQuestion: { title: '', isPrivate: false },
   updateCreatingQuestion: (payload) =>
     set({
@@ -32,6 +34,7 @@ const useStore = create<State>((set) => ({
       },
     }),
 
+  //編集中のQuestion
   editingQuestion: {
     id: 0,
     title: '',

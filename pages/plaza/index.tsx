@@ -1,17 +1,20 @@
 import { NextPage } from 'next'
 import { Layout } from '../../components/Layout'
-import { QuestionCreateForm } from '../../components/QuestionCreateForm'
-import { QuestionList } from '../../components/QuestionList'
-import { useQueryUser } from '../../hooks/useQueryUser'
+import { QuestionCreateForm } from '../../components/Question/QuestionCreateForm/QuestionCreateForm'
+import { QuestionList } from '../../components/Question/QuestionList/QuestionList'
+import { useQueryUser } from '../../hooks/user/useQueryUser'
 import { Loader, Switch, useMantineTheme } from '@mantine/core'
-import { QuestionAllList } from '../../components/QuestionAllList'
+import { QuestionAllList } from '../../components/Question/QuestionAllList/QuestionAllList'
 import { IconUserPlus } from '@tabler/icons'
 import { useToggle } from '../../hooks/useToggle'
 
 const Plaza: NextPage = () => {
   const theme = useMantineTheme()
+
+  //ログインしているユーザー
   const { data: user, status } = useQueryUser()
 
+  //タイムラインの表示コンテンツを切り替えるための状態<boolean>(全員or友達のみ)
   const { state, toggle } = useToggle()
 
   if (status === 'loading') {
@@ -26,6 +29,7 @@ const Plaza: NextPage = () => {
         <QuestionCreateForm />
         <Switch
           size="md"
+          label={state ? '全員' : '友達のみ'}
           color={theme.colorScheme === 'dark' ? 'gray' : 'indigo'}
           onLabel={
             <IconUserPlus

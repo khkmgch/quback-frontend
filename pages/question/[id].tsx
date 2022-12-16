@@ -2,12 +2,10 @@ import { Loader, ScrollArea } from '@mantine/core'
 import axios from 'axios'
 import { NextPage } from 'next'
 import { useRouter } from 'next/router'
-import React, { useEffect, useState } from 'react'
-import { BookList } from '../../components/BookList'
-import { BookShelf } from '../../components/BookShelf'
+import { useEffect, useState } from 'react'
 import { Layout } from '../../components/Layout'
-import { QuestionEditForm } from '../../components/QuestionEditForm'
-import { useGetQuestion } from '../../hooks/useGetQuestion'
+import { QuestionEditForm } from '../../components/Question/QuestionEditForm/QuestionEditForm'
+import { useGetQuestion } from '../../hooks/question/useGetQuestion' 
 import { Question_WithRelation } from '../../types'
 const Question: NextPage = () => {
   const router = useRouter()
@@ -60,7 +58,7 @@ const Question: NextPage = () => {
     init(id)
   }, [router.query])
   return (
-    <Layout title="question">
+    <Layout title="Question">
       {editingQuestion.id !== 0 ? (
         <QuestionEditForm
           question={editingQuestion}

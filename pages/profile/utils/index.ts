@@ -1,7 +1,6 @@
-import axios from 'axios'
 import { FormEvent } from 'react'
-import { useMutateUser } from '../../../hooks/useMutateUser'
-import { usePostFile } from '../../../hooks/usePostFile'
+import { useMutateUser } from '../../../hooks/user/useMutateUser'
+import { usePostFile } from '../../../hooks/fileUpload/usePostFile'
 import { User_WithRelation } from '../../../types'
 
 export const profileUtils = () => {
