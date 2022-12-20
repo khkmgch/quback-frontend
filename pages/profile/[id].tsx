@@ -132,21 +132,24 @@ const Profile: NextPage = () => {
               className="h-48 w-full object-cover"
             />
           </Menu.Target>
-
-          <Menu.Dropdown>
-            {/* <Menu.Item> */}
-            <FileInput
-              placeholder="カバー画像を変更"
-              size="md"
-              variant="unstyled"
-              accept="image/png,image/jpeg"
-              value={coverPicture}
-              onChange={(file) => {
-                setCoverPicture(file)
-                handleCoverPicture(file, user)
-              }}
-            />
-          </Menu.Dropdown>
+          {loginUser?.id === user.id ? (
+            <Menu.Dropdown>
+              {/* <Menu.Item> */}
+              <FileInput
+                placeholder="カバー画像を変更"
+                size="md"
+                variant="unstyled"
+                accept="image/png,image/jpeg"
+                value={coverPicture}
+                onChange={(file) => {
+                  setCoverPicture(file)
+                  handleCoverPicture(file, user)
+                }}
+              />
+            </Menu.Dropdown>
+          ) : (
+            <></>
+          )}
         </Menu>
 
         <Menu shadow="md" position="right-start" offset={-20} withArrow>
@@ -163,20 +166,23 @@ const Profile: NextPage = () => {
               height={96}
             />
           </Menu.Target>
-
-          <Menu.Dropdown>
-            <FileInput
-              placeholder="プロフィール画像を変更"
-              size="md"
-              variant="unstyled"
-              accept="image/png,image/jpeg"
-              value={profilePicture}
-              onChange={(file) => {
-                setProfilePicture(file)
-                handleProfilePicture(file, user)
-              }}
-            />
-          </Menu.Dropdown>
+          {loginUser?.id === user.id ? (
+            <Menu.Dropdown>
+              <FileInput
+                placeholder="プロフィール画像を変更"
+                size="md"
+                variant="unstyled"
+                accept="image/png,image/jpeg"
+                value={profilePicture}
+                onChange={(file) => {
+                  setProfilePicture(file)
+                  handleProfilePicture(file, user)
+                }}
+              />
+            </Menu.Dropdown>
+          ) : (
+            <></>
+          )}
         </Menu>
       </div>
 
@@ -277,7 +283,7 @@ const Profile: NextPage = () => {
           ]}
         />
       </div>
-      <div className="mt-10 w-full  flex justify-center items-center">
+      <div className="mt-10 flex  w-full items-center justify-center">
         {loginUser?.id === user.id ? (
           display === 'question' ? (
             <QuestionList isTimeline={false} isMine={true} userId={user.id} />

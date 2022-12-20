@@ -17,9 +17,10 @@ export const bookShelfUtils = () => {
   const { getBooksByUserId } = useGetBook()
   //userIdで特定のユーザーの本棚を取得して配列を返すメソッド
   const fetchBooks = async (userId: number) => {
-    const response: { data: Book_WithRelation[] } = await getBooksByUserId(userId)
+    const response: Book_WithRelation[] = await getBooksByUserId(userId)
+    console.log('response: ', response)
     if (response) {
-      return response.data
+      return response
     } else return []
   }
   return { linkTo, fetchBooks }

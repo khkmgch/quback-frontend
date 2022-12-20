@@ -34,6 +34,7 @@ export const BookShelf: FC<Props> = ({ userId, isMine, questionId }) => {
   const init = async (isMine: boolean, userId: number) => {
     if (!isMine) {
       const books = await fetchBooks(userId)
+      console.log('books: ', books)
       setBooks(books)
     } else if (status === 'success' && loginShelf) {
       setBooks(loginShelf)

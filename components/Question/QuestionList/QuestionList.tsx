@@ -62,7 +62,15 @@ export const QuestionList: FC<Props> = ({ isTimeline, isMine, userId }) => {
     if (userId !== 0) {
       init(isTimeline, isMine, loginQuestions, loginUser, userId)
     }
-  }, [questionStatus, userId, isMine, isTimeline, loginUser, userStatus])
+  }, [
+    loginQuestions,
+    questionStatus,
+    userId,
+    isMine,
+    isTimeline,
+    loginUser,
+    userStatus,
+  ])
 
   if (
     questionStatus === 'loading' ||
@@ -73,7 +81,11 @@ export const QuestionList: FC<Props> = ({ isTimeline, isMine, userId }) => {
     return <Loader />
   else
     return (
-      <List my="lg" spacing="sm"  className="list-none px-2 w-full md:w-4/5 lg:w-192 ">
+      <List
+        my="lg"
+        spacing="sm"
+        className="w-full list-none px-2 md:w-4/5 lg:w-192 "
+      >
         {questions?.map((question) => {
           return (
             <QuestionItem

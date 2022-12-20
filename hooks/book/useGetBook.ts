@@ -4,7 +4,7 @@ import { Book_WithRelation, SearchedData } from '../../types'
 
 export const useGetBook = () => {
   const getBooksByUserId = async (userId: number) => {
-    const response: { data: Book_WithRelation[] } = await axios
+    const response:  Book_WithRelation[]  = await axios
       .get(`${process.env.NEXT_PUBLIC_API_URL}/book/all/shelf/${userId}`)
       .then((res) => res.data)
       .catch((err) => {

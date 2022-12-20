@@ -62,9 +62,12 @@ const Auth: NextPage = () => {
     try {
       //新規登録モードの場合、登録が成功したら続いてログインも行う
       if (isRegister) {
-        register({ email: form.values.email, password: form.values.password })
+        await register({
+          email: form.values.email,
+          password: form.values.password,
+        })
       }
-      login({
+      await login({
         email: form.values.email,
         password: form.values.password,
       })
@@ -80,8 +83,8 @@ const Auth: NextPage = () => {
   }
   return (
     <Layout title="Auth">
-      <div className="flex flex-col h-screen w-screen items-center justify-center ">
-        <div className='text-3xl font-semibold mb-5 '>Qu Back へようこそ</div>
+      <div className="flex h-screen w-screen flex-col items-center justify-center ">
+        <div className="mb-5 text-3xl font-semibold ">Qu Back へようこそ</div>
         <div className="flex flex-col items-center justify-center rounded-md bg-white p-10 ">
           {/* errorに何らかの文字列が存在する場合にアラートを表示 */}
           {error && (
@@ -99,7 +102,7 @@ const Auth: NextPage = () => {
           <form onSubmit={form.onSubmit(handleSubmit)}>
             <TextInput
               mt="md"
-              size='md'
+              size="md"
               id="email"
               label="メールアドレス"
               withAsterisk
@@ -109,7 +112,7 @@ const Auth: NextPage = () => {
             />
             <PasswordInput
               mt="md"
-              size='md'
+              size="md"
               id="password"
               label="パスワード"
               withAsterisk
@@ -122,7 +125,7 @@ const Auth: NextPage = () => {
                 // テキストをクリックできるようにしたいのでcomponentとtypeをbuttonに設定
                 component="button"
                 type="button"
-                size='sm'
+                size="sm"
                 className="text-custom-blue-2"
                 onClick={() => {
                   switchMode()

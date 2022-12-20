@@ -100,6 +100,7 @@ export const useMutateQuestion = () => {
             previousQuestions.filter((question) => question.id !== variables)
           )
         }
+        alert("Questionを削除しました。")
       },
       onError: (err: any) => {
         if (err.response.status === 401 || err.response.status === 403) {
